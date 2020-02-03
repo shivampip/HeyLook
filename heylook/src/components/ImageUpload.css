@@ -1,4 +1,4 @@
-.camera {
+.image-upload {
 	width: 400px;
 	height: fit-content;
 	padding: 20px;
@@ -16,11 +16,11 @@
 	padding: 10px;
 }
 
-.cameraView {
+.image-upload-view {
 	width: 100%;
 }
 
-.snapBtn {
+.proceedBtn {
 	width: 100%;
 	padding: 20px;
 	background-color: blueviolet;
@@ -28,5 +28,8 @@
 	margin: 15px auto;
 	border: none;
 	outline: none;
-	border-radius: 10px;
+    border-radius: 10px;
 }
+
+
+

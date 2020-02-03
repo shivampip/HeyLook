@@ -1,0 +1,24 @@
+.showcase {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+.showcase img {
+    flex-shrink: 0;
+    max-width: 90%;
+    max-height: 90%;
+    min-width: 80%;
+    min-height: 80%;
+    position: absolute;
+}
+
+.showcase canvas{
+    flex-shrink: 0;
+    max-width: 90%;
+    max-height: 90%;
+    min-width: 80%;
+    min-height: 80%;
+}
