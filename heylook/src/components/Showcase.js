@@ -1,9 +1,11 @@
 import "./Showcase.css";
 import React from "react";
+import { ToastsContainer, ToastsStore } from "react-toasts";
 import { render } from "@testing-library/react";
 import placeholder from "../images/placeholder.png";
 import vplaceholder from "../images/vplaceholder.png";
 import shivam from "../images/shivam.jpg";
+import mobile from "../images/mobile.jpg";
 
 import * as faceapi from "face-api.js";
 const MODEL_URL = process.env.PUBLIC_URL + "/models";
@@ -17,28 +19,28 @@ class Showcase extends React.Component {
 	}
 
 	async componentDidMount() {
+		ToastsStore.success("Hey, Look");
 		console.log(this.imgRef);
 		this.imgRef.current.addEventListener("load", this.setSpan);
 		//return true;
 
+		ToastsStore.info("Loading Models..");
 		await this.loadModels();
-		const timg = document.getElementById("myImg");
+		ToastsStore.success("Model Loaded");
+		const img = document.getElementById("myImg");
 		const canvas = document.getElementById("myCan");
 
-		let res = await faceapi
-			.detectAllFaces(timg)
-			.withFaceLandmarks()
-			.withFaceDescriptors();
+		let res = await faceapi.detectAllFaces(img).withFaceLandmarks();
 		console.log(res);
 
-		const displaySize = { width: timg.width, height: timg.height };
-		// resize the overlay canvas to the input dimensions
+		const displaySize = { width: img.width, height: img.height };
 		faceapi.matchDimensions(canvas, displaySize);
 
 		const rres = faceapi.resizeResults(res, displaySize);
 		faceapi.draw.drawDetections(canvas, rres);
 		faceapi.draw.drawFaceLandmarks(canvas, rres);
 		console.log("Done");
+		ToastsStore.success("Hey Look");
 	}
 
 	async loadModels() {
@@ -46,7 +48,7 @@ class Showcase extends React.Component {
 		//await faceapi.loadModels(MODEL_URL);
 		await faceapi.loadFaceDetectionModel(MODEL_URL);
 		await faceapi.loadFaceLandmarkModel(MODEL_URL);
-		await faceapi.loadFaceRecognitionModel(MODEL_URL);
+		//await faceapi.loadFaceRecognitionModel(MODEL_URL);
 		console.log("Model loaded");
 	}
 
@@ -59,11 +61,6 @@ class Showcase extends React.Component {
 		let contains = true;
 		let fwidth = 0;
 		let fheight = 0;
-
-		console.log("cWidth: " + cWidth);
-		console.log("cHeight: " + cHeight);
-		console.log("Width: " + width);
-		console.log("Height: " + height);
 
 		let oRatio = width / height;
 		let cRatio = cWidth / cHeight;
@@ -78,18 +75,23 @@ class Showcase extends React.Component {
 
 		console.log("fWidth: " + fwidth);
 		console.log("fHeight: " + fheight);
-		this.setState({ cwidth: fwidth, cheight: fheight });
+		//this.setState({ cwidth: fwidth, cheight: fheight });
 	};
 
 	render() {
+		let pic = shivam;
+		if (this.props.imgSrc) {
+			pic = this.props.imgSrc;
+		}
 		return (
 			<div className="showcase">
-				<img id="myImg" src={shivam} ref={this.imgRef} />
+				<img id="myImg" src={pic} ref={this.imgRef} />
 				<canvas
 					id="myCan"
 					width={this.state.cwidth}
 					height={this.state.cheight}
 				/>
+				<ToastsContainer store={ToastsStore} />
 			</div>
 		);
 	}

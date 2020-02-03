@@ -1,40 +1,36 @@
 import "./ImageUpload.css";
-import React from 'react';
-import ImageUploader from 'react-images-upload';
+import React from "react";
 
-class ImageUpload extends React.Component{
-    constructor(props) {
-        super(props);
-         this.state = { pictures: [] };
-         this.onDrop = this.onDrop.bind(this);
-    }
- 
-    onDrop(picture) {
-        console.log("Image Dropped");
-        this.setState({
-            pictures: this.state.pictures.concat(picture),
-        });
-    }
- 
-    render() {
-        return (
-            <div className="image-upload">
-			<p className="smileP">Select Image</p>
-			<ImageUploader className="image-upload-view"
-                withIcon={true}
-                buttonText='Choose images'
-                onChange={this.onDrop}
-                imgExtension={['.jpg', '.png', '.gif']}
-                maxFileSize={5242880}
-                withPreview= "true"
-            />
-			<button className="proceedBtn" >
-				Proceed
-			</button>
-		</div>
-            
-        );
-    }
+class ImageUpload extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = { img: undefined };
+	}
+
+	handleChange = eve => {
+		console.log("Picture selected");
+		let file = URL.createObjectURL(eve.target.files[0]);
+		this.props.onSelect(file);
+	};
+
+	render() {
+		return (
+			<div className="image-upload">
+				<p className="smileP">Select Image</p>
+				<div className="fileUpload">
+					<button>Upload</button>
+					<input
+						className="upload"
+						type="file"
+						onChange={this.handleChange}
+						accept="image/*"
+					/>
+				</div>
+				{/* <img src={this.state.file} />
+				<button className="proceedBtn">Proceed</button> */}
+			</div>
+		);
+	}
 }
 
 export default ImageUpload;

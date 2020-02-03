@@ -8,13 +8,13 @@ const videoConstraints = {
 	facingMode: "user"
 };
 
-const Camera = () => {
+const Camera = props => {
 	const webcamRef = React.useRef(null);
 
 	const capture = React.useCallback(() => {
-		console.log("Captureing..");
 		const imageSrc = webcamRef.current.getScreenshot();
 		console.log("Pic captured");
+		props.onCapture(imageSrc);
 	}, [webcamRef]);
 
 	return (
@@ -25,6 +25,8 @@ const Camera = () => {
 				className="cameraView"
 				ref={webcamRef}
 				videoConstraints={videoConstraints}
+				minScreenshotHeight="720"
+				minScreenshotWidth="1280"
 			/>
 			<button className="snapBtn" onClick={capture}>
 				Capture
