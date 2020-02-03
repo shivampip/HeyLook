@@ -3,8 +3,11 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import placeholder from "../images/placeholder.png";
 import vplaceholder from "../images/vplaceholder.png";
-import mobile_img from "../images/mobile.jpg";
-import demo from "../images/sim_image.png";
+import shivam from "../images/shivam.jpg";
+
+import * as faceapi from 'face-api.js';
+const MODEL_URL = '../models/weights/';
+const minConfidence = 0.6;
 
 class Showcase extends React.Component{
     constructor(props){
@@ -13,10 +16,29 @@ class Showcase extends React.Component{
         this.imgRef = React.createRef();
     }
 
-    componentDidMount() {
-		console.log(this.imgRef);
-		this.imgRef.current.addEventListener("load", this.setSpan);
-	}
+    
+    async componentDidMount() {
+        
+		    console.log(this.imgRef);
+        //this.imgRef.current.addEventListener("load", this.setSpan);
+        
+        await this.loadModels();
+        console.log("post model load");
+        const testImageHTML = document.getElementById('myImg')
+        this.drawHTMLImage(this.canvas.current,testImageHTML,296,296);
+        await this.getFullFaceDescription(this.canvas.current);
+        this.drawDescription(this.canvas.current);
+      }
+    
+      async loadModels () {
+          console.log("Loading models..");
+        //await faceapi.loadModels(MODEL_URL);
+        await faceapi.loadFaceDetectionModel(MODEL_URL);
+        console.log("inter");
+        await faceapi.loadFaceLandmarkModel(MODEL_URL);
+        await faceapi.loadFaceRecognitionModel(MODEL_URL);
+        console.log("Model loaded");
+      }
 
 	setSpan = () => {
 		console.log(this.imgRef);
@@ -52,7 +74,7 @@ class Showcase extends React.Component{
 
     render(){
         return (<div className="showcase">
-            <img src={placeholder} ref={this.imgRef} onresize={this.setSpan}/>
+            <img id="myImg" src={shivam} ref={this.imgRef}/>
             <canvas width={this.state.cwidth} height={this.state.cheight}/>
         </div>);
     }
