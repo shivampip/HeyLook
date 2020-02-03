@@ -1,24 +1,21 @@
 .showcase {
     display: flex;
     height: 100vh;
+    width: 100%;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     position: relative;
 }
 .showcase img {
-    flex-shrink: 0;
-    max-width: 90%;
-    max-height: 90%;
-    min-width: 80%;
-    min-height: 80%;
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    display: block;
     position: absolute;
 }
 
 .showcase canvas{
     flex-shrink: 0;
-    max-width: 90%;
-    max-height: 90%;
-    min-width: 80%;
-    min-height: 80%;
+    z-index: 5;
 }
