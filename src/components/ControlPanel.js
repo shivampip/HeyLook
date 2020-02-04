@@ -34,6 +34,16 @@ class ControlPanel extends React.Component {
 		});
 	};
 
+	componentWillUpdate(){
+		this.state.logs.push(
+			<span style={{ color: "#94ffc8", fontWeight: "bold" }}>
+				$ &nbsp;&nbsp;{this.props.log}
+				<br />
+			</span>
+		);
+	}
+
+
 	render() {
 		return (
 			<div className="control-panel">

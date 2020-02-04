@@ -20,18 +20,17 @@ class Showcase extends React.Component {
 
 	async componentDidMount() {
 		ToastsStore.success("Hey, Look");
+		//this.props.showLog("Showcasing...");
 		console.log(this.imgRef);
 		this.imgRef.current.addEventListener("load", this.setSpan);
 		//return true;
 
-		ToastsStore.info("Loading Models..");
-		await this.loadModels();
-		ToastsStore.success("Model Loaded");
 		const img = document.getElementById("myImg");
 		const canvas = document.getElementById("myCan");
 
 		let res = await faceapi.detectAllFaces(img).withFaceLandmarks();
 		console.log(res);
+		//this.props.showLog("Face detected");
 
 		const displaySize = { width: img.width, height: img.height };
 		faceapi.matchDimensions(canvas, displaySize);

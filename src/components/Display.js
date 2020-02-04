@@ -22,9 +22,11 @@ class Display extends React.Component {
 	getRenderContent() {
 		if (this.state.isImgChoosen) {
 			this.state.isImgChoosen = false;
-			return <Showcase imgSrc={this.state.imgSrc} />;
+			return <Showcase imgSrc={this.state.imgSrc} showLog={this.props.showLog}/>;
 		} else {
-			if (this.props.inMode === "camera") {
+			if(this.props.inMode==="unchanged"){
+				return <Showcase imgSrc={this.state.imgSrc} showLog={this.props.showLog}/>;
+			}else if (this.props.inMode === "camera") {
 				return <Camera onCapture={this.onCapture} />;
 			} else {
 				return <ImageUpload onSelect={this.onSelect} />;
