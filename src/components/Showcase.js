@@ -20,7 +20,7 @@ class Showcase extends React.Component {
 
 	detactFaces= async (img, canvas)=>{
 		//const result= await faceapi.detectSingleFace(img);
-		const result= await faceapi.detectSingleFace(img).withFaceLandmarks();
+		const result= await faceapi.detectAllFaces(img).withFaceLandmarks();
 		//const result= await faceapi.detectSingleFace(img).withFaceExpressions();
 		//const result= await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceExpressions();
 		//const result= await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceExpressions().withFaceDescriptor();
@@ -31,12 +31,19 @@ class Showcase extends React.Component {
 		faceapi.matchDimensions(canvas, displaySize);
 		let resizeResults = faceapi.resizeResults(result, displaySize);
 
+		if(resizeResults.length===0){
+			this.props.showLog("No face found");
+			return true;
+		}
+
+		console.log("Showing Detection Results");
+		console.log(resizeResults);
+
 		faceapi.draw.drawDetections(canvas, resizeResults);
 		this.props.showLog("Face detected");
 
 		faceapi.draw.drawFaceLandmarks(canvas, resizeResults);
 		this.props.showLog("Face landmark detected");
-
 
 	}
 
@@ -45,23 +52,15 @@ class Showcase extends React.Component {
 		const canvas = document.getElementById("myCan");
 
 		await this.detactFaces(img, canvas);
-		return false; 
-
-		let res = await faceapi.detectAllFaces(img).withFaceLandmarks();
-		this.props.showLog("Face detected");
-
-		const displaySize = { width: img.width, height: img.height };
-		faceapi.matchDimensions(canvas, displaySize);
-
-		const rres = faceapi.resizeResults(res, displaySize);
-		faceapi.draw.drawDetections(canvas, rres);
-		faceapi.draw.drawFaceLandmarks(canvas, rres);
-		this.props.showLog("Face landmark rendered");
 	}
 
 	componentDidMount() {
 		this.imgRef.current.addEventListener("load", this.setSpan);
-		this.detectFaces();
+		if(this.props.detectNow){
+			this.detectFaces();
+		}else{
+			this.props.showLog("Auto face detection disabled");
+		}
 	}
 
 

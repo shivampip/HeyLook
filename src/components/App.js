@@ -45,7 +45,12 @@ class App extends React.Component {
 	render() {
 		return (
 			<div className="app">
-				<Display inMode={this.state.inMode} showLog={this.showLog} onPhoto={this.onPhoto} imgSrc={this.state.imgSrc} />
+				<Display 
+				inMode={this.state.inMode} 
+				showLog={this.showLog} 
+				onPhoto={this.onPhoto} 
+				imgSrc={this.state.imgSrc} 
+				detectNow={true} />
 				<ControlPanel setInputMode={this.setInputMode} log={this.state.logMsg} />
 			</div>
 		);

@@ -17,7 +17,7 @@ class Display extends React.Component {
 
 	getRenderContent() {
 		if(this.props.inMode==="showcase"){
-			return <Showcase imgSrc={this.props.imgSrc} showLog={this.props.showLog}/>;
+			return <Showcase imgSrc={this.props.imgSrc} showLog={this.props.showLog} detectNow={this.props.detectNow}/>;
 		}else if (this.props.inMode === "camera") {
 			return <Camera onCapture={this.onCapture} />;
 		} else {
