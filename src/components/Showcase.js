@@ -18,9 +18,8 @@ class Showcase extends React.Component {
 		this.imgRef = React.createRef();
 	}
 
-	async componentDidMount() {
-		this.imgRef.current.addEventListener("load", this.setSpan);
 
+	detectFaces= async ()=>{
 		const img = document.getElementById("myImg");
 		const canvas = document.getElementById("myCan");
 
@@ -34,6 +33,11 @@ class Showcase extends React.Component {
 		faceapi.draw.drawDetections(canvas, rres);
 		faceapi.draw.drawFaceLandmarks(canvas, rres);
 		this.props.showLog("Face landmark rendered");
+	}
+
+	componentDidMount() {
+		this.imgRef.current.addEventListener("load", this.setSpan);
+		this.detectFaces();
 	}
 
 
@@ -58,8 +62,8 @@ class Showcase extends React.Component {
 			fheight = cHeight;
 		}
 
-		console.log("fWidth: " + fwidth);
-		console.log("fHeight: " + fheight);
+		console.log("finalWidth: " + fwidth);
+		console.log("finalHeight: " + fheight);
 	};
 
 	render() {
