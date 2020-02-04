@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/HeyLook/static/css/main.123ed190.chunk.css",
+    "main.js": "/HeyLook/static/js/main.af3e9a6b.chunk.js",
+    "main.js.map": "/HeyLook/static/js/main.af3e9a6b.chunk.js.map",
+    "runtime-main.js": "/HeyLook/static/js/runtime-main.af16c78e.js",
+    "runtime-main.js.map": "/HeyLook/static/js/runtime-main.af16c78e.js.map",
+    "static/js/2.8384d5b8.chunk.js": "/HeyLook/static/js/2.8384d5b8.chunk.js",
+    "static/js/2.8384d5b8.chunk.js.map": "/HeyLook/static/js/2.8384d5b8.chunk.js.map",
+    "index.html": "/HeyLook/index.html",
+    "precache-manifest.9f42261c1aff0fdf76c23652ce208727.js": "/HeyLook/precache-manifest.9f42261c1aff0fdf76c23652ce208727.js",
+    "service-worker.js": "/HeyLook/service-worker.js",
+    "static/css/main.123ed190.chunk.css.map": "/HeyLook/static/css/main.123ed190.chunk.css.map",
+    "static/js/2.8384d5b8.chunk.js.LICENSE.txt": "/HeyLook/static/js/2.8384d5b8.chunk.js.LICENSE.txt",
+    "static/media/shivam.jpg": "/HeyLook/static/media/shivam.08f0206c.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.af16c78e.js",
+    "static/js/2.8384d5b8.chunk.js",
+    "static/css/main.123ed190.chunk.css",
+    "static/js/main.af3e9a6b.chunk.js"
+  ]
+}
