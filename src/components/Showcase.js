@@ -11,6 +11,8 @@ import * as faceapi from "face-api.js";
 const MODEL_URL = process.env.PUBLIC_URL + "/models";
 const minConfidence = 0.6;
 
+const SWAG_GLASS = process.env.PUBLIC_URL + "/images/swag_glass_cropped.png";
+
 class Showcase extends React.Component {
 	constructor(props) {
 		super(props);
@@ -18,20 +20,78 @@ class Showcase extends React.Component {
 		this.imgRef = React.createRef();
 	}
 
-	detactFaces= async (img, canvas)=>{
-		//const result= await faceapi.detectSingleFace(img);
-		const result= await faceapi.detectAllFaces(img).withFaceLandmarks();
-		//const result= await faceapi.detectSingleFace(img).withFaceExpressions();
-		//const result= await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceExpressions();
-		//const result= await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceExpressions().withFaceDescriptor();
-		//const result= await faceapi.detectSingleFace(img).withFaceLandmarks().withAgeAndGender().withFaceDescriptor();
-		//const result= await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceExpressions().withAgeAndGender().withFaceDescriptor();
+	print = msg => {
+		console.log(msg);
+	};
 
+	postProcessing = (img, canvas, results) => {
+		console.clear();
+		this.print("Post processing");
+		let landmarks = results.landmarks;
+		this.print(landmarks);
+
+		let nose = landmarks.getNose();
+		let leftEye = landmarks.getLeftEye();
+		let rightEye = landmarks.getRightEye();
+		this.print(leftEye);
+		this.print(rightEye);
+
+		let lpx = leftEye[0].x;
+		let lpy = leftEye[0].y;
+		let rpx = rightEye[3].x;
+		let rpy = rightEye[3].y;
+
+		let ww = rpx - lpx;
+		const angle = Math.atan2(rpy - lpy, rpx - lpx);
+		//* (180 / Math.PI);  //degree
+		let extra = ww / 5;
+
+		let llpx = extra * Math.cos(angle);
+		let llpy = extra * Math.sin(angle);
+		lpx = lpx - llpx;
+		lpy = lpy - llpy;
+		ww = ww + extra * 2;
+
+		var ctx = canvas.getContext("2d");
+		ctx.beginPath();
+		ctx.moveTo(lpx, lpy);
+		ctx.lineTo(rpx, rpy);
+		ctx.stroke();
+
+		let drawing = new Image();
+		drawing.src = SWAG_GLASS; // can also be a remote URL e.g. http://
+
+		ctx.translate(lpx, lpy);
+		ctx.rotate(angle);
+
+		drawing.onload = function() {
+			let ratio = drawing.width / ww;
+			let hh = drawing.height / ratio;
+			ctx.drawImage(drawing, 0, 0, ww, hh);
+
+			console.log("Width: " + ww);
+			console.log("Height: " + hh);
+			ctx.rotate(-angle);
+			ctx.translate(0, 0);
+		};
+	};
+
+	resizeResults = (img, canvas, result) => {
 		const displaySize = { width: img.width, height: img.height };
 		faceapi.matchDimensions(canvas, displaySize);
-		let resizeResults = faceapi.resizeResults(result, displaySize);
+		return faceapi.resizeResults(result, displaySize);
+	};
 
-		if(resizeResults.length===0){
+	detactFaces = async (img, canvas) => {
+		let useTinyModel = true;
+		const result = await faceapi
+			.detectSingleFace(img)
+			.withFaceLandmarks(useTinyModel);
+		//.withFaceExpressions();
+
+		let resizeResults = this.resizeResults(img, canvas, result);
+
+		if (resizeResults.length === 0) {
 			this.props.showLog("No face found");
 			return true;
 		}
@@ -45,24 +105,35 @@ class Showcase extends React.Component {
 		faceapi.draw.drawFaceLandmarks(canvas, resizeResults);
 		this.props.showLog("Face landmark detected");
 
-	}
+		// faceapi.draw.drawFaceExpressions(canvas, resizeResults);
+		// this.props.showLog("Face expression detected");
 
-	detectFaces= async ()=>{
+		this.postProcessing(img, canvas, resizeResults);
+	};
+
+	detect5Points = async (img, canvas) => {
+		let result = await faceapi.mtcnn(img);
+		let resizeResults = this.resizeResults(img, canvas, result);
+		faceapi.draw.drawFaceLandmarks(canvas, resizeResults);
+		this.props.showLog("Face landmark 5 point detected");
+	};
+
+	detectFaces = async () => {
 		const img = document.getElementById("myImg");
 		const canvas = document.getElementById("myCan");
 
 		await this.detactFaces(img, canvas);
-	}
+		//await this.detect5Points(img, canvas);
+	};
 
 	componentDidMount() {
 		this.imgRef.current.addEventListener("load", this.setSpan);
-		if(this.props.detectNow){
+		if (this.props.detectNow) {
 			this.detectFaces();
-		}else{
+		} else {
 			this.props.showLog("Auto face detection disabled");
 		}
 	}
-
 
 	setSpan = () => {
 		console.log(this.imgRef);
