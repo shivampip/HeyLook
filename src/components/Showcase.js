@@ -18,10 +18,34 @@ class Showcase extends React.Component {
 		this.imgRef = React.createRef();
 	}
 
+	detactFaces= async (img, canvas)=>{
+		//const result= await faceapi.detectSingleFace(img);
+		const result= await faceapi.detectSingleFace(img).withFaceLandmarks();
+		//const result= await faceapi.detectSingleFace(img).withFaceExpressions();
+		//const result= await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceExpressions();
+		//const result= await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceExpressions().withFaceDescriptor();
+		//const result= await faceapi.detectSingleFace(img).withFaceLandmarks().withAgeAndGender().withFaceDescriptor();
+		//const result= await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceExpressions().withAgeAndGender().withFaceDescriptor();
+
+		const displaySize = { width: img.width, height: img.height };
+		faceapi.matchDimensions(canvas, displaySize);
+		let resizeResults = faceapi.resizeResults(result, displaySize);
+
+		faceapi.draw.drawDetections(canvas, resizeResults);
+		this.props.showLog("Face detected");
+
+		faceapi.draw.drawFaceLandmarks(canvas, resizeResults);
+		this.props.showLog("Face landmark detected");
+
+
+	}
 
 	detectFaces= async ()=>{
 		const img = document.getElementById("myImg");
 		const canvas = document.getElementById("myCan");
+
+		await this.detactFaces(img, canvas);
+		return false; 
 
 		let res = await faceapi.detectAllFaces(img).withFaceLandmarks();
 		this.props.showLog("Face detected");
