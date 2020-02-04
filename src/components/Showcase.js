@@ -19,18 +19,13 @@ class Showcase extends React.Component {
 	}
 
 	async componentDidMount() {
-		ToastsStore.success("Hey, Look");
-		//this.props.showLog("Showcasing...");
-		console.log(this.imgRef);
 		this.imgRef.current.addEventListener("load", this.setSpan);
-		//return true;
 
 		const img = document.getElementById("myImg");
 		const canvas = document.getElementById("myCan");
 
 		let res = await faceapi.detectAllFaces(img).withFaceLandmarks();
-		console.log(res);
-		//this.props.showLog("Face detected");
+		this.props.showLog("Face detected");
 
 		const displaySize = { width: img.width, height: img.height };
 		faceapi.matchDimensions(canvas, displaySize);
@@ -38,18 +33,9 @@ class Showcase extends React.Component {
 		const rres = faceapi.resizeResults(res, displaySize);
 		faceapi.draw.drawDetections(canvas, rres);
 		faceapi.draw.drawFaceLandmarks(canvas, rres);
-		console.log("Done");
-		ToastsStore.success("Hey Look");
+		this.props.showLog("Face landmark rendered");
 	}
 
-	async loadModels() {
-		console.log("Loading models..");
-		//await faceapi.loadModels(MODEL_URL);
-		await faceapi.loadFaceDetectionModel(MODEL_URL);
-		await faceapi.loadFaceLandmarkModel(MODEL_URL);
-		//await faceapi.loadFaceRecognitionModel(MODEL_URL);
-		console.log("Model loaded");
-	}
 
 	setSpan = () => {
 		console.log(this.imgRef);
@@ -74,7 +60,6 @@ class Showcase extends React.Component {
 
 		console.log("fWidth: " + fwidth);
 		console.log("fHeight: " + fheight);
-		//this.setState({ cwidth: fwidth, cheight: fheight });
 	};
 
 	render() {

@@ -7,7 +7,7 @@ import * as faceapi from "face-api.js";
 const MODEL_URL = process.env.PUBLIC_URL + "/models";
 
 class App extends React.Component {
-	state = { inMode: "browse", logMsg: "Welcome" };
+	state = { inMode: "browse", logMsg: "Welcome", imgSrc: null };
 
 	setInputMode = mode => {
 		this.setState({ inMode: mode });
@@ -25,6 +25,7 @@ class App extends React.Component {
 		await faceapi.loadFaceLandmarkModel(MODEL_URL);
 		//await faceapi.loadFaceLandmarkTinyModel(MODEL_URL);
 		this.setState({logMsg: "Face landmark detection model loaded"});
+		this.setState({logMsg: null});
 	}
 
 	async componentDidMount(){
@@ -33,14 +34,18 @@ class App extends React.Component {
 	}
 
 	showLog= (msg)=>{
-		this.setState({logMsg: msg, inMode: "unchanged"});
+		this.setState({logMsg: msg, inMode: "showcase"});
 	}
 
+	onPhoto= (imgSrc)=>{
+		console.log("Photo got");
+		this.setState({inMode: "showcase", imgSrc: imgSrc});
+	}
 
 	render() {
 		return (
 			<div className="app">
-				<Display inMode={this.state.inMode} showLog={this.showLog} />
+				<Display inMode={this.state.inMode} showLog={this.showLog} onPhoto={this.onPhoto} imgSrc={this.state.imgSrc} />
 				<ControlPanel setInputMode={this.setInputMode} log={this.state.logMsg} />
 			</div>
 		);

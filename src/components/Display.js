@@ -5,33 +5,25 @@ import ImageUpload from "./ImageUpload";
 import Showcase from "./Showcase";
 
 class Display extends React.Component {
-	state = { isImgChoosen: false, imgSrc: undefined };
+	state = { imgSrc: undefined };
 
 	onCapture = img => {
-		console.log("Image Reached to Display");
-		console.log(img);
-		this.setState({ isImgChoosen: true, imgSrc: img });
+		this.props.onPhoto(img);
 	};
 
 	onSelect = img => {
-		console.log("Image selected");
-		//let iimg = URL.createObjectURL(img[0]);
-		this.setState({ isImgChoosen: true, imgSrc: img });
+		this.props.onPhoto(img);
 	};
 
 	getRenderContent() {
-		if (this.state.isImgChoosen) {
-			this.state.isImgChoosen = false;
-			return <Showcase imgSrc={this.state.imgSrc} showLog={this.props.showLog}/>;
+		if(this.props.inMode==="showcase"){
+			return <Showcase imgSrc={this.props.imgSrc} showLog={this.props.showLog}/>;
+		}else if (this.props.inMode === "camera") {
+			return <Camera onCapture={this.onCapture} />;
 		} else {
-			if(this.props.inMode==="unchanged"){
-				return <Showcase imgSrc={this.state.imgSrc} showLog={this.props.showLog}/>;
-			}else if (this.props.inMode === "camera") {
-				return <Camera onCapture={this.onCapture} />;
-			} else {
-				return <ImageUpload onSelect={this.onSelect} />;
-			}
+			return <ImageUpload onSelect={this.onSelect} />;
 		}
+	
 	}
 	render() {
 		return <div className="display">{this.getRenderContent()}</div>;

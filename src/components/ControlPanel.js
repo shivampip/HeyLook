@@ -23,6 +23,9 @@ class ControlPanel extends React.Component {
 	};
 
 	addLog = (text, col = "#94ffc8") => {
+		if(!text){
+			return false;
+		}
 		this.state.logs.push(
 			<span style={{ color: col, fontWeight: "bold" }}>
 				$ &nbsp;&nbsp;{text}
@@ -34,7 +37,11 @@ class ControlPanel extends React.Component {
 		});
 	};
 
-	componentWillUpdate(){
+
+	prerender= ()=>{
+		if(!this.props.log){
+			return false;
+		}
 		this.state.logs.push(
 			<span style={{ color: "#94ffc8", fontWeight: "bold" }}>
 				$ &nbsp;&nbsp;{this.props.log}
@@ -45,6 +52,7 @@ class ControlPanel extends React.Component {
 
 
 	render() {
+		this.prerender();
 		return (
 			<div className="control-panel">
 				<div className="wrapper">
