@@ -19,6 +19,11 @@
 	background-color: rgb(28, 1, 71);
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
+	color: white;
+	box-sizing: border-box;
+	padding: 10px;
+	overflow: auto;
+	clear: both;
 }
 
 .uploadBtnWrapper {

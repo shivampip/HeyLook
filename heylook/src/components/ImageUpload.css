@@ -51,11 +51,11 @@
 .fileUpload button {
 	width: 100%;
 	padding: 20px;
-	background-color: rgb(240, 240, 240);
+	background-color: rgb(154, 250, 194);
 	color: black;
 	font-size: 1.5rem;
 	margin: 15px auto;
-	border: 5px solid rgb(75, 75, 75);
+	border: none;
 	outline: none;
 	border-radius: 10px;
 }

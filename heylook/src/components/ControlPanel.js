@@ -2,23 +2,43 @@ import "./ControlPanel.css";
 import React from "react";
 
 class ControlPanel extends React.Component {
+	constructor(props) {
+		super(props);
+	}
 	state = {
 		cameraClass: "btnActive",
-		uploadClass: "btnInActive"
+		uploadClass: "btnInActive",
+		logs: []
 	};
 	setCamera = () => {
 		this.setState({ cameraClass: "btnActive", uploadClass: "btnInactive" });
+		this.props.setInputMode("camera");
+		this.addLog("Camera Set");
 	};
 
 	setUpload = () => {
 		this.setState({ cameraClass: "btnInactive", uploadClass: "btnActive" });
+		this.props.setInputMode("browse");
+		this.addLog("File brower set");
+	};
+
+	addLog = (text, col = "#94ffc8") => {
+		this.state.logs.push(
+			<span style={{ color: col, fontWeight: "bold" }}>
+				$ &nbsp;&nbsp;{text}
+				<br />
+			</span>
+		);
+		this.setState({
+			logs: this.state.logs
+		});
 	};
 
 	render() {
 		return (
 			<div className="control-panel">
 				<div className="wrapper">
-					<div className="screen"></div>
+					<div className="screen">{this.state.logs}</div>
 					<div className="uploadBtnWrapper">
 						<button onClick={this.setCamera} className={this.state.cameraClass}>
 							Camera
