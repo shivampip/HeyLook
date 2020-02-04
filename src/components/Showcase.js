@@ -6,6 +6,7 @@ import placeholder from "../images/placeholder.png";
 import vplaceholder from "../images/vplaceholder.png";
 import shivam from "../images/shivam.jpg";
 import mobile from "../images/mobile.jpg";
+import { FacePainter } from "./Painter";
 
 import * as faceapi from "face-api.js";
 const MODEL_URL = process.env.PUBLIC_URL + "/models";
@@ -108,7 +109,9 @@ class Showcase extends React.Component {
 		// faceapi.draw.drawFaceExpressions(canvas, resizeResults);
 		// this.props.showLog("Face expression detected");
 
-		this.postProcessing(img, canvas, resizeResults);
+		//this.postProcessing(img, canvas, resizeResults);
+		let fp = new FacePainter(img, canvas, resizeResults.landmarks);
+		fp.putGlasses(SWAG_GLASS);
 	};
 
 	detect5Points = async (img, canvas) => {
