@@ -35,6 +35,13 @@ class FaceNormalizer {
 		let llpy = extra * Math.sin(angle);
 		lpx = lpx - llpx;
 		lpy = lpy - llpy;
+
+		let pangle= angle+ Math.PI/2;
+		llpx = extra/2 * Math.sin(angle);
+		llpy = extra/2 * Math.cos(angle);
+		lpx = lpx - llpx;
+		lpy = lpy - llpy;
+
 		width = width + extra * 2;
 		return [lpx, lpy, width, angle];
 	}
@@ -62,7 +69,7 @@ export class FacePainter {
 		this.ctx.translate(lpx, lpy);
 		this.ctx.rotate(angle);
 
-		drawing.onload = function() {
+		drawing.onload = ()=> {
 			let ratio = drawing.width / width;
 			let height = drawing.height / ratio;
 			this.ctx.drawImage(drawing, 0, 0, width, height);
