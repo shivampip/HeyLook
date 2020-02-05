@@ -4,8 +4,6 @@ import { ToastsContainer, ToastsStore } from "react-toasts";
 import { render } from "@testing-library/react";
 import placeholder from "../images/placeholder.png";
 import vplaceholder from "../images/vplaceholder.png";
-import shivam from "../images/shivam.jpg";
-import mobile from "../images/mobile.jpg";
 import { FacePainter } from "./Painter";
 
 import * as faceapi from "face-api.js";
@@ -14,6 +12,7 @@ const minConfidence = 0.6;
 
 const SWAG_GLASS = process.env.PUBLIC_URL + "/images/swag_glass_cropped.png";
 const SWAG_CIGAR = process.env.PUBLIC_URL + "/images/cigra_modi.png";
+const SWAG_CHAIN = process.env.PUBLIC_URL + "/images/chain.png";
 
 class Showcase extends React.Component {
 	constructor(props) {
@@ -86,10 +85,20 @@ class Showcase extends React.Component {
 
 	detactFaces = async (img, canvas) => {
 		let useTinyModel = true;
+		console.log("Start Face Detection");
+		console.log(faceapi.nets.ssdMobilenetv1);
+		if (!!faceapi.nets.ssdMobilenetv1.params) {
+			console.log("Model Loaded");
+		} else {
+			console.log("Model not loaded yet");
+			this.props.showLog("Model not loaded yet");
+			return true;
+		}
 		const result = await faceapi
 			.detectSingleFace(img)
 			.withFaceLandmarks(useTinyModel);
 		//.withFaceExpressions();
+		console.log("Got the results");
 
 		let resizeResults = this.resizeResults(img, canvas, result);
 
@@ -104,7 +113,7 @@ class Showcase extends React.Component {
 		//faceapi.draw.drawDetections(canvas, resizeResults);
 		this.props.showLog("Face detected");
 
-		faceapi.draw.drawFaceLandmarks(canvas, resizeResults);
+		// faceapi.draw.drawFaceLandmarks(canvas, resizeResults);
 		this.props.showLog("Face landmark detected");
 
 		// faceapi.draw.drawFaceExpressions(canvas, resizeResults);
@@ -112,23 +121,27 @@ class Showcase extends React.Component {
 
 		//this.postProcessing(img, canvas, resizeResults);
 		let fp = new FacePainter(img, canvas, resizeResults.landmarks);
-		fp.putGlasses(SWAG_GLASS);
-		//fp.drawEyesEnds();
-		//fp.drawMouthMid();
-		//fp.putCigar(SWAG_CIGAR);
-		setTimeout(() => {  
-			fp.putCigar(SWAG_CIGAR);
-		}, 2000);
-		setTimeout(()=> {
-			var link = document.createElement('a');
-    		link.innerHTML = 'Download Image';
-			link.addEventListener('click', function(ev) {
-    		link.href = canvas.toDataURL();
-    		link.download = "mypainting.png";
-			}, false);
-			document.body.appendChild(link);
-			link.click();
-		}, 4000);
+		await fp.putGlasses(SWAG_GLASS, false);
+		this.props.showLog("Glasses Put");
+		await fp.putChain(SWAG_CHAIN, false);
+		this.props.showLog("Chain Put");
+		await fp.putCigar(SWAG_CIGAR, false);
+		this.props.showLog("Cigra Put");
+		//this.downlaodPhoto(canvas);
+	};
+
+	downlaodPhoto = canvas => {
+		var link = document.createElement("a");
+		link.innerHTML = "Download Image";
+		link.addEventListener(
+			"click",
+			function(ev) {
+				link.href = canvas.toDataURL();
+				link.download = "mypainting.png";
+			},
+			false
+		);
+		link.click();
 	};
 
 	detect5Points = async (img, canvas) => {
@@ -142,8 +155,12 @@ class Showcase extends React.Component {
 		const img = document.getElementById("myImg");
 		const canvas = document.getElementById("myCan");
 
-		await this.detactFaces(img, canvas);
-		//await this.detect5Points(img, canvas);
+		try {
+			await this.detactFaces(img, canvas);
+			//await this.detect5Points(img, canvas);
+		} catch (err) {
+			console.log("Model Not Loaded");
+		}
 	};
 
 	componentDidMount() {
@@ -181,7 +198,7 @@ class Showcase extends React.Component {
 	};
 
 	render() {
-		let pic = shivam;
+		let pic = placeholder;
 		if (this.props.imgSrc) {
 			pic = this.props.imgSrc;
 		}
