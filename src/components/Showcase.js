@@ -100,7 +100,7 @@ class Showcase extends React.Component {
 		console.log("Showing Detection Results");
 		console.log(resizeResults);
 
-		faceapi.draw.drawDetections(canvas, resizeResults);
+		//faceapi.draw.drawDetections(canvas, resizeResults);
 		this.props.showLog("Face detected");
 
 		faceapi.draw.drawFaceLandmarks(canvas, resizeResults);
@@ -111,7 +111,9 @@ class Showcase extends React.Component {
 
 		//this.postProcessing(img, canvas, resizeResults);
 		let fp = new FacePainter(img, canvas, resizeResults.landmarks);
-		fp.putGlasses(SWAG_GLASS);
+		//fp.putGlasses(SWAG_GLASS);
+		//fp.drawEyesEnds();
+		fp.drawMouthMid();
 	};
 
 	detect5Points = async (img, canvas) => {
