@@ -25,58 +25,6 @@ class Showcase extends React.Component {
 		console.log(msg);
 	};
 
-	postProcessing = (img, canvas, results) => {
-		console.clear();
-		this.print("Post processing");
-		let landmarks = results.landmarks;
-		this.print(landmarks);
-
-		let nose = landmarks.getNose();
-		let leftEye = landmarks.getLeftEye();
-		let rightEye = landmarks.getRightEye();
-		this.print(leftEye);
-		this.print(rightEye);
-
-		let lpx = leftEye[0].x;
-		let lpy = leftEye[0].y;
-		let rpx = rightEye[3].x;
-		let rpy = rightEye[3].y;
-
-		let ww = rpx - lpx;
-		const angle = Math.atan2(rpy - lpy, rpx - lpx);
-		//* (180 / Math.PI);  //degree
-		let extra = ww / 5;
-
-		let llpx = extra * Math.cos(angle);
-		let llpy = extra * Math.sin(angle);
-		lpx = lpx - llpx;
-		lpy = lpy - llpy;
-		ww = ww + extra * 2;
-
-		var ctx = canvas.getContext("2d");
-		ctx.beginPath();
-		ctx.moveTo(lpx, lpy);
-		ctx.lineTo(rpx, rpy);
-		ctx.stroke();
-
-		let drawing = new Image();
-		drawing.src = SWAG_GLASS; // can also be a remote URL e.g. http://
-
-		ctx.translate(lpx, lpy);
-		ctx.rotate(angle);
-
-		drawing.onload = function() {
-			let ratio = drawing.width / ww;
-			let hh = drawing.height / ratio;
-			ctx.drawImage(drawing, 0, 0, ww, hh);
-
-			console.log("Width: " + ww);
-			console.log("Height: " + hh);
-			ctx.rotate(-angle);
-			ctx.translate(0, 0);
-		};
-	};
-
 	resizeResults = (img, canvas, result) => {
 		const displaySize = { width: img.width, height: img.height };
 		faceapi.matchDimensions(canvas, displaySize);
