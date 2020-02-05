@@ -116,7 +116,19 @@ class Showcase extends React.Component {
 		//fp.drawEyesEnds();
 		//fp.drawMouthMid();
 		//fp.putCigar(SWAG_CIGAR);
-		setTimeout(() => {  fp.putCigar(SWAG_CIGAR) }, 2000);
+		setTimeout(() => {  
+			fp.putCigar(SWAG_CIGAR);
+		}, 2000);
+		setTimeout(()=> {
+			var link = document.createElement('a');
+    		link.innerHTML = 'Download Image';
+			link.addEventListener('click', function(ev) {
+    		link.href = canvas.toDataURL();
+    		link.download = "mypainting.png";
+			}, false);
+			document.body.appendChild(link);
+			link.click();
+		}, 4000);
 	};
 
 	detect5Points = async (img, canvas) => {
