@@ -2,6 +2,10 @@ export const paint = () => {
 	console.log("Painting....");
 };
 
+// (0, 0) at top-left
+// horizontal x, vertical y
+// Angle clockwise
+
 class FaceNormalizer {
 	constructor(landmarks) {
 		this.landmarks = landmarks;
@@ -146,22 +150,6 @@ export class FacePainter {
 			this.ctx.restore();
 		};
 
-	}
-
-	drawMouthMid(){
-		let mouth= this.face.getMouthMid();
-		let x= mouth[0];
-		let y= mouth[1];
-		let angle= mouth[2];
-
-		let dm= this.face.move(x, y, angle, 50);
-		let dx= dm[0];
-		let dy= dm[1];
-
-		this.ctx.beginPath();
-		this.ctx.moveTo(x,y);
-		this.ctx.lineTo(dx, dy);
-		this.ctx.stroke();
 	}
 
 }
