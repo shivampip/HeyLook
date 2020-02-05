@@ -13,6 +13,7 @@ const MODEL_URL = process.env.PUBLIC_URL + "/models";
 const minConfidence = 0.6;
 
 const SWAG_GLASS = process.env.PUBLIC_URL + "/images/swag_glass_cropped.png";
+const SWAG_CIGAR = process.env.PUBLIC_URL + "/images/cigra_modi.png";
 
 class Showcase extends React.Component {
 	constructor(props) {
@@ -111,9 +112,11 @@ class Showcase extends React.Component {
 
 		//this.postProcessing(img, canvas, resizeResults);
 		let fp = new FacePainter(img, canvas, resizeResults.landmarks);
-		//fp.putGlasses(SWAG_GLASS);
+		fp.putGlasses(SWAG_GLASS);
 		//fp.drawEyesEnds();
-		fp.drawMouthMid();
+		//fp.drawMouthMid();
+		//fp.putCigar(SWAG_CIGAR);
+		setTimeout(() => {  fp.putCigar(SWAG_CIGAR) }, 2000);
 	};
 
 	detect5Points = async (img, canvas) => {

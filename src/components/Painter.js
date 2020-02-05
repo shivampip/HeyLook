@@ -29,7 +29,8 @@ class FaceNormalizer {
 		let ey= mouth[6].y;
 		let angle = Math.atan2(ey - sy, ex - sx);
 		angle= angle+ Math.PI/2;
-		return [mx, my, angle];
+		let distance= Math.hypot(ex- sx, ey- sy);
+		return [mx, my, angle, distance];
 	}
 
 	move(x, y, angle, d){
@@ -79,9 +80,18 @@ export class FacePainter {
 		this.ctx.strokeStyle = "#6bfffd";
 		this.landmarks = landmarks;
 		this.face = new FaceNormalizer(landmarks);
+		this.ctx.save();
+	}
+
+	drawImg(imgSrc, x, y, angle){
+		this.ctx.save();
+		this.ctx.translate(x, y);
+		this.ctx.rotate(angle);
+
 	}
 
 	putGlasses(imgSrc) {
+		this.ctx.save();
 		let eyes = this.face.getEyesEnds();
 		let lpx = eyes[0];
 		let lpy = eyes[1];
@@ -98,12 +108,45 @@ export class FacePainter {
 			let ratio = drawing.width / width;
 			let height = drawing.height / ratio;
 			this.ctx.drawImage(drawing, 0, 0, width, height);
-
-			this.ctx.rotate(-angle);
-			this.ctx.translate(0, 0);
+			this.ctx.restore();
 		};
 	}
 
+	putCigar(imgSrc){
+		this.ctx.save();
+		// this.ctx.beginPath();
+		let mouth= this.face.getMouthMid();
+		let x= mouth[0];
+		let y= mouth[1];
+		let angle= mouth[2];
+		let d= mouth[4];
+		d= 100;
+
+		let pangle= angle- Math.PI/2;  
+
+		let dm= this.face.move(x, y, pangle, d);
+		let dx= dm[0];
+		let dy= dm[1];
+
+		// this.ctx.moveTo(x, y);
+		// this.ctx.lineTo(dx, dy);
+		// this.ctx.stroke();
+
+		let drawing = new Image();
+		drawing.src = imgSrc;
+
+		this.ctx.translate(dx, dy);
+		this.ctx.rotate(-pangle);
+		//this.ctx.rotate(angle);
+
+		drawing.onload = ()=> {
+			let ratio = drawing.width / d;
+			let height = drawing.height / ratio;
+			this.ctx.drawImage(drawing, 0, 0, d, height);
+			this.ctx.restore();
+		};
+
+	}
 
 	drawMouthMid(){
 		let mouth= this.face.getMouthMid();
@@ -121,38 +164,4 @@ export class FacePainter {
 		this.ctx.stroke();
 	}
 
-	drawEyesEnds(extra = -1) {
-		let leftEye = this.landmarks.getLeftEye();
-		let rightEye = this.landmarks.getRightEye();
-
-		let lpx = leftEye[0].x;
-		let lpy = leftEye[0].y;
-		let rpx = rightEye[3].x;
-		let rpy = rightEye[3].y;
-
-		this.ctx.beginPath();
-		this.ctx.moveTo(lpx, lpy);
-
-		let width = rpx - lpx;
-		const angle = Math.atan2(rpy - lpy, rpx - lpx);
-		if (extra === -1) {
-			extra = width / 5;
-		}
-		let llpx = extra * Math.cos(angle);
-		let llpy = extra * Math.sin(angle);
-		lpx = lpx - llpx;
-		lpy = lpy - llpy;
-		this.ctx.lineTo(lpx, lpy);
-
-		let pangle= angle+ Math.PI/2;
-		llpx = extra/1 * Math.cos(pangle);
-		llpy = extra/1 * Math.sin(pangle);
-		lpx = lpx - llpx;
-		lpy = lpy - llpy;
-		this.ctx.lineTo(lpx, lpy);
-
-		width = width + extra * 2;
-		this.ctx.stroke();
-		return [lpx, lpy, width, angle];
-	}
 }
